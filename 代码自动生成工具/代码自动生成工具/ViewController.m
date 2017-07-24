@@ -293,7 +293,7 @@
                         classContent = [self handleDataEngine:subObject key:key path:path];
                         
                             [property appendFormat:kWHC_PROPERTY('s'),[NSString stringWithFormat:@"NSArray<%@ *>",className],propertyName];
-                        
+                        [property insertString:[NSString stringWithFormat:kWHC_IMPORT_H,className] atIndex:0];
                         NSRange range = [classContent rangeOfString:@"@property"];
                         
                         [self addText:[FileManager createFile:[NSString stringWithFormat:@"%@/%@.h",path,className] content:[NSString stringWithFormat:@"%@\n\n%@",[classContent substringToIndex:range.location],[NSString stringWithFormat:kWHC_CLASS,className,[classContent substringFromIndex:range.location]]]]];
