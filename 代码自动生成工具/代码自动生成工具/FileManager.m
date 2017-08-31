@@ -74,7 +74,7 @@
 + (NSString *)fileContentFromFile:(NSString *)fileName{
 
     NSError *error;
-    NSString *tts = [NSString stringWithContentsOfFile:[NSString stringWithFormat:@"%@/%@",NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).lastObject,fileName] encoding:NSUTF8StringEncoding error:&error];
+    NSString *tts = [NSString stringWithContentsOfFile:[NSString stringWithFormat:@"%@/%@",[self defaultPath],fileName] encoding:NSUTF8StringEncoding error:&error];
     if (error) {
         return nil;
     }

@@ -15,5 +15,7 @@
 
 @property (weak) IBOutlet NSTextField *filePath;
 
+@property (weak) IBOutlet NSTextField *modelFilePath;
+
 @end
 

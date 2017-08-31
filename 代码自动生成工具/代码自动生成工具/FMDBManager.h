@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <FMDB.h>
+#import "FileManager.h"
 
 @interface FMDBManager : NSObject
 

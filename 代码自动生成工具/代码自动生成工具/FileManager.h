@@ -20,4 +20,6 @@
 
 + (NSString *)fileContentFromFile:(NSString *)fileName;
 
++ (NSString *)defaultPath;
+
 @end

@@ -73,7 +73,7 @@
         // 实例化FMDataBase对象
         
 
-        _dataBase = [FMDatabase databaseWithPath:[NSString stringWithFormat:@"%@/autoCodeDB.db",[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject]]];
+        _dataBase = [FMDatabase databaseWithPath:[NSString stringWithFormat:@"%@/autoCodeDB.db",[FileManager defaultPath]]];
         
     }
     return _dataBase;
