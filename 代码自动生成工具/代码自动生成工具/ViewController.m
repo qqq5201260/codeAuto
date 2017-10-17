@@ -24,6 +24,8 @@
 
 #define kWHC_CLASS_M     @("\n\n@implementation %@\n\n@end\n")
 
+#define KWHC_MODEL_M     @("\n\n#import \"%@.h\"\n\n@implementation %@\n\n@end\n")
+
 #define kWHC_IMPORT_H    @("\n#import \"%@.h\"\n")
 
 #define kSWHC_CLASS @("\n@objc(%@)\nclass %@ :NSObject{\n%@\n}")
@@ -106,9 +108,9 @@
     for (int i =0 ;i<params.count;i++) {
         NSString *str = params[i];
         if (i==0) {
-            [param appendFormat:@"With%@:(NSString *)%@",[self upper:str],str];
+            [param appendFormat:@"With%@:(NSString *)%@ ",[self upper:str],str];
         }else{
-            [param appendFormat:@" %@:(NSString *)%@",str,str];
+            [param appendFormat:@"%@:(NSString *)%@ ",str,str];
         }
     }
     
@@ -129,10 +131,10 @@
     for (int i =0 ;i<params.count;i++) {
         NSString *str = params[i];
         if (i==0) {
-            [param appendFormat:@"With%@:(NSString *)%@",[self upper:str],str];
+            [param appendFormat:@"With%@:(NSString *)%@ ",[self upper:str],str];
             [property appendFormat:@"With%@:%@",[self upper:str],str];
         }else{
-            [param appendFormat:@" %@:(NSString *)%@",str,str];
+            [param appendFormat:@"%@:(NSString *)%@ ",str,str];
             [property appendFormat:@" %@:%@",str,str];
         }
         
@@ -188,7 +190,9 @@
             redics = [[redic substringToIndex:redic.length-1] stringByAppendingString:@"}\n"];
         }
     }
-    
+    if(params.count==0){
+    redics = @"nil";
+    }
     return [NSString stringWithFormat:desc,[self upper:model.name],model.mome,[self date],[self upper:model.name],[self upper:model.name],property,param,keyValue,model.urlPath,redics];
     
 }
@@ -217,7 +221,7 @@
             dict = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableLeaves error:NULL];
         }
         
-        [_classMString appendFormat:kWHC_CLASS_M,className];
+        [_classMString appendFormat:KWHC_MODEL_M,className,className];
         
         NSString *content = [self handleDataEngine:dict key:nil path:model.name];
          NSRange range = [content rangeOfString:@"@property"];
@@ -225,7 +229,7 @@
         
        
         
-       [self addText:[FileManager createFile:[NSString stringWithFormat:@"%@/%@.h",model.name,className] content:[NSString stringWithFormat:@"%@\n\n%@",[content substringToIndex:range.location],_classString]]];
+       [self addText:[FileManager createFile:[NSString stringWithFormat:@"%@/%@.h",model.name,className] content:[NSString stringWithFormat:@"\n\n#import <Foundation/Foundation.h>\n                                                          #import <UIKit/UIKit.h>\n\n%@\n\n%@",[content substringToIndex:range.location],_classString]]];
         
         
         [self addText:[FileManager createFile:[NSString stringWithFormat:@"%@/%@.m",model.name,className] content:_classMString]];
@@ -264,9 +268,9 @@
                     
                     NSRange range = [classContent rangeOfString:@"@property"];
                     
-                    [self addText:[FileManager createFile:[NSString stringWithFormat:@"%@/%@.h",path,className] content:[NSString stringWithFormat:@"%@\n\n%@",[classContent substringToIndex:range.location],[NSString stringWithFormat:kWHC_CLASS,className,[classContent substringFromIndex:range.location]]]]];
+                    [self addText:[FileManager createFile:[NSString stringWithFormat:@"%@/%@.h",path,className] content:[NSString stringWithFormat:@"\n\n#import <Foundation/Foundation.h>\n                                                          #import <UIKit/UIKit.h>\n\n%@\n\n%@",[classContent substringToIndex:range.location],[NSString stringWithFormat:kWHC_CLASS,className,[classContent substringFromIndex:range.location]]]]];
                     
-                    [self addText:[FileManager createFile:[NSString stringWithFormat:@"%@/%@.m",path,className] content:[NSString stringWithFormat:kWHC_CLASS_M,className]]];
+                    [self addText:[FileManager createFile:[NSString stringWithFormat:@"%@/%@.m",path,className] content:[NSString stringWithFormat:KWHC_MODEL_M,className,className]]];
                     
                     
                 }else if ([subObject isKindOfClass:[NSArray class]]){
@@ -296,9 +300,9 @@
                         [property insertString:[NSString stringWithFormat:kWHC_IMPORT_H,className] atIndex:0];
                         NSRange range = [classContent rangeOfString:@"@property"];
                         
-                        [self addText:[FileManager createFile:[NSString stringWithFormat:@"%@/%@.h",path,className] content:[NSString stringWithFormat:@"%@\n\n%@",[classContent substringToIndex:range.location],[NSString stringWithFormat:kWHC_CLASS,className,[classContent substringFromIndex:range.location]]]]];
+                        [self addText:[FileManager createFile:[NSString stringWithFormat:@"%@/%@.h",path,className] content:[NSString stringWithFormat:@"\n\n#import <Foundation/Foundation.h>\n                                                          #import <UIKit/UIKit.h>\n\n%@\n\n%@",[classContent substringToIndex:range.location],[NSString stringWithFormat:kWHC_CLASS,className,[classContent substringFromIndex:range.location]]]]];
                         
-                        [self addText:[FileManager createFile:[NSString stringWithFormat:@"%@/%@.m",path,className] content:[NSString stringWithFormat:kWHC_CLASS_M,className]]];
+                        [self addText:[FileManager createFile:[NSString stringWithFormat:@"%@/%@.m",path,className] content:[NSString stringWithFormat:KWHC_MODEL_M,className,className]]];
                         
                     }
                 }else if ([subObject isKindOfClass:[NSString class]]){
